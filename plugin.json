@@ -6,7 +6,7 @@
     "name": "sevenking0213",
     "email": "sevenking0213@gmail.com"
   },
-  "homepage": "https://github.com/sevenking0213-bit/covas",
+  "homepage": "https://github.com/sevenking-dev/covas",
   "keywords": [
     "annotation",
     "canvas",
@@ -22,7 +22,7 @@
     "longDescription": "Covas provides a focused, single-image annotation canvas in the Codex sidebar. Load a reference image, draw boxes, arrows, and freehand marks, and send the annotated result back into your conversation. State is persisted per session.",
     "developerName": "sevenking0213",
     "category": "Productivity",
-    "websiteURL": "https://github.com/sevenking0213-bit/covas",
+    "websiteURL": "https://github.com/sevenking-dev/covas",
     "brandColor": "#6366F1",
     "capabilities": [
       "Interactive canvas",

@@ -17,7 +17,7 @@ Covas 是一个面向 Codex 的单图标注 widget 插件。在当前会话里�
 把下面这段发给 Codex：
 
 ```
-请从 https://github.com/sevenking0213-bit/covas.git 安装 Covas Codex 插件。
+请从 https://github.com/sevenking-dev/covas.git 安装 Covas Codex 插件。
 请 clone 仓库到 ~/.codex/plugins/covas，确认 .codex-plugin/plugin.json 存在，
 把插件加入 personal marketplace，先运行 codex plugin marketplace add ~，
 再运行 codex plugin add covas@personal。
@@ -28,7 +28,7 @@ Covas 是一个面向 Codex 的单图标注 widget 插件。在当前会话里�
 
 ```bash
 mkdir -p ~/.codex/plugins
-git clone https://github.com/sevenking0213-bit/covas.git ~/.codex/plugins/covas
+git clone https://github.com/sevenking-dev/covas.git ~/.codex/plugins/covas
 cd ~/.codex/plugins/covas && npm install && npm run build
 ```
 
