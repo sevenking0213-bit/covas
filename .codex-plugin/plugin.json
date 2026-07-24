@@ -1,0 +1,14 @@
+{
+  "name": "covas",
+  "version": "0.1.0",
+  "description": "Single-image annotation workspace for Codex — draw boxes, arrows, and freehand marks, then send annotated results back into the conversation.",
+  "interface": {
+    "displayName": "Covas",
+    "shortDescription": "Single-image annotation workspace in the Codex sidebar.",
+    "longDescription": "Covas provides a focused, single-image annotation canvas in the Codex sidebar. Load a reference image, draw boxes, arrows, and freehand marks, and send the annotated result back into your conversation. State is persisted per session.",
+    "brandColor": "#6366F1",
+    "defaultPrompt": "Open Covas."
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@covas/workspace",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@covas/bridge": "0.1.0",
+    "@covas/shared-types": "0.1.0",
+    "konva": "^9.3.18",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-konva": "^19.0.7"
+  }
+}

@@ -1,0 +1,796 @@
+.canvagent-workspace-shell {
+  --canvagent-ink: #334155;
+  --canvagent-bg: rgb(248, 248, 248);
+  --canvagent-border: rgba(15, 23, 42, 0.08);
+  --canvagent-bottom-panel-height: 164px;
+  position: relative;
+  min-height: 100vh;
+  background: var(--canvagent-bg);
+  color: var(--canvagent-ink);
+  overflow: hidden;
+}
+
+.canvagent-workspace-main {
+  position: relative;
+  min-height: 100vh;
+}
+
+.canvagent-workspace-toolbar-anchor {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  z-index: 20;
+  transform: translateX(-50%);
+}
+
+.canvagent-workspace-floating-tools {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.canvagent-workspace-style-panel-host {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 19;
+  margin-top: 10px;
+  pointer-events: none;
+}
+
+.canvagent-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 22px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: white;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+}
+
+.canvagent-image-context-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 22px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.canvagent-image-context-title {
+  max-width: 220px;
+  overflow: hidden;
+  color: #2563eb;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 13px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  padding: 0 6px 0 2px;
+}
+
+.canvagent-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: #334155;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, opacity 160ms ease, border-color 160ms ease;
+}
+
+.canvagent-toolbar button:hover {
+  background: #f8fafc;
+}
+
+.canvagent-toolbar button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.canvagent-toolbar-button-core {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 10px;
+  background: transparent;
+  color: #475569;
+  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.canvagent-toolbar-button-core.is-active {
+  background: #0f172a;
+  color: #f8fafc;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.14);
+}
+
+.canvagent-toolbar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.canvagent-toolbar-icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.canvagent-toolbar-button-core.is-action.is-undo .canvagent-toolbar-icon svg,
+.canvagent-toolbar-button-core.is-action.is-redo .canvagent-toolbar-icon svg {
+  transform: translateY(0.35px);
+}
+
+.canvagent-toolbar-button-core.is-action.is-clear .canvagent-toolbar-icon svg {
+  transform: translateY(-0.85px);
+}
+
+.canvagent-toolbar-divider {
+  width: 1px;
+  height: 24px;
+  margin: 0 4px;
+  background: rgba(148, 163, 184, 0.35);
+}
+
+.canvagent-stage-shell {
+  height: 100vh;
+}
+
+.canvagent-stage-canvas {
+  position: relative;
+  min-height: 540px;
+  height: 100%;
+  background: var(--canvagent-bg);
+}
+
+.canvagent-stage-style-panel-anchor {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  pointer-events: auto;
+}
+
+.canvagent-stage-style-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 0;
+  padding: 6px 10px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.canvagent-style-divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 2px 0 1px;
+  background: #e2e8f0;
+}
+
+.canvagent-style-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 160ms ease;
+}
+
+.canvagent-style-swatch:hover {
+  opacity: 0.92;
+}
+
+.canvagent-style-swatch-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.canvagent-style-swatch-dot.is-active {
+  box-shadow: none;
+}
+
+.canvagent-style-fill-toggle,
+.canvagent-style-font-size {
+  height: 28px;
+  border-radius: 10px;
+  background: white;
+  color: #475569;
+  font: 600 11px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.canvagent-style-fill-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  border: 0;
+  cursor: pointer;
+}
+
+.canvagent-style-fill-toggle-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: white;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.55);
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.canvagent-style-fill-toggle-inner.is-active {
+  background: #111827;
+  color: white;
+  box-shadow: none;
+}
+
+.canvagent-style-font-size-wrap {
+  position: relative;
+  width: 64px;
+}
+
+.canvagent-style-font-size {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 64px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 0 10px 0 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  cursor: pointer;
+}
+
+.canvagent-style-font-size:hover {
+  border-color: rgba(100, 116, 139, 0.45);
+}
+
+.canvagent-style-font-size-value {
+  min-width: 18px;
+  text-align: left;
+}
+
+.canvagent-style-font-size-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: #94a3b8;
+  transition: transform 160ms ease;
+}
+
+.canvagent-style-font-size-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.canvagent-style-font-size-chevron svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.canvagent-style-font-size-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  width: 100%;
+  padding: 6px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.99);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+}
+
+.canvagent-style-font-size-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 32px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #475569;
+  padding: 0 8px;
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.canvagent-style-font-size-option:hover {
+  background: #f8fafc;
+}
+
+.canvagent-style-font-size-option.is-active {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.canvagent-style-font-size-option-check {
+  font-size: 11px;
+  line-height: 1;
+  color: #64748b;
+  opacity: 0;
+}
+
+.canvagent-style-font-size-option-check.is-visible {
+  opacity: 1;
+}
+
+.canvagent-style-width-control {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 2px;
+}
+
+.canvagent-style-width-track {
+  position: relative;
+  width: 116px;
+  height: 24px;
+}
+
+.canvagent-style-width-input {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.canvagent-style-width-rail,
+.canvagent-style-width-progress {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+}
+
+.canvagent-style-width-rail {
+  background: #cbd5e1;
+}
+
+.canvagent-style-width-progress {
+  background: #111827;
+}
+
+.canvagent-style-width-dot,
+.canvagent-style-width-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.canvagent-style-width-dot {
+  border-radius: 999px;
+}
+
+.canvagent-style-width-dot.is-small {
+  left: 4px;
+  width: 8px;
+  height: 8px;
+}
+
+.canvagent-style-width-dot.is-large {
+  right: 2px;
+  width: 14px;
+  height: 14px;
+}
+
+.canvagent-style-width-thumb {
+  width: 5px;
+  height: 12px;
+  border-radius: 999px;
+  background: #111827;
+  transform: translate(-50%, -50%);
+}
+
+.canvagent-stage-surface {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--canvagent-bg);
+  padding: 90px 24px 24px;
+  box-sizing: border-box;
+}
+
+.canvagent-stage-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.canvagent-stage-world-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.canvagent-stage-image-item {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.canvagent-stage-image-name {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  color: #475569;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 13px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.canvagent-stage-image-activation,
+.canvagent-stage-reference-image {
+  position: absolute;
+  border: 1px solid rgba(148, 163, 184, 0.34);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  padding: 0;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.canvagent-stage-image-activation {
+  cursor: pointer;
+  opacity: 0;
+}
+
+.canvagent-stage-image-drag-handle {
+  position: absolute;
+  z-index: 4;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  padding: 0;
+  cursor: move;
+}
+
+.canvagent-stage-reference-image {
+  cursor: pointer;
+}
+
+.canvagent-stage-image-frame {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(96, 165, 250, 0.75);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.18), 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+.canvagent-stage-image-frame.is-active {
+  overflow: hidden;
+}
+
+.canvagent-stage-image-frame.is-single-image {
+  border-color: rgba(148, 163, 184, 0.34);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.canvagent-stage-dom-hit-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.canvagent-stage-dom-hit-target {
+  position: absolute;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.canvagent-stage-dom-hit-target.is-selected {
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.9);
+}
+
+.canvagent-stage-dom-resize-handle {
+  position: absolute;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #2563eb;
+  border-radius: 3px;
+  background: white;
+  padding: 0;
+  transform: translate(-50%, -50%);
+}
+
+.canvagent-stage-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.canvagent-stage-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.canvagent-stage-zoom-chip {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 30;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #64748b;
+  padding: 6px 10px;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.canvagent-stage-zoom-chip.is-single-image {
+  bottom: calc(var(--canvagent-bottom-panel-height) + 8px);
+}
+
+.canvagent-stage-text-editor {
+  position: absolute;
+  z-index: 20;
+  min-width: 180px;
+  min-height: 36px;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  background: transparent;
+  padding: 4px 6px;
+  color: #1d4ed8;
+  font: 600 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  resize: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.canvagent-workspace-bottom-panel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  display: grid;
+  gap: 10px;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--canvagent-border);
+  background: var(--canvagent-bg);
+  box-sizing: border-box;
+}
+
+.canvagent-thumbnail-strip {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 2px;
+}
+
+.canvagent-thumbnail-strip button {
+  position: relative;
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.canvagent-thumbnail-frame {
+  display: flex;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border: 1px solid var(--canvagent-border);
+  border-radius: 12px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.canvagent-thumbnail-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.canvagent-thumbnail-strip button.is-active .canvagent-thumbnail-frame,
+.canvagent-thumbnail-strip button[data-active='true'] .canvagent-thumbnail-frame {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.canvagent-thumbnail-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #2563eb;
+}
+
+.canvagent-prompt-composer {
+  position: relative;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  border: 1px solid var(--canvagent-border);
+  border-radius: 20px;
+  background: white;
+  padding: 12px 52px 12px 16px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-sizing: border-box;
+}
+
+.canvagent-prompt-label {
+  display: block;
+}
+
+.canvagent-prompt-composer textarea {
+  width: 100%;
+  min-height: 32px;
+  max-height: 140px;
+  border: 0;
+  background: transparent;
+  padding: 1px 0;
+  color: #334155;
+  font: 400 14px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  resize: none;
+  outline: none;
+  overflow-y: auto;
+}
+
+.canvagent-prompt-composer button {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 10px;
+  background: #d4d4d8;
+  color: white;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.canvagent-prompt-composer button:disabled {
+  cursor: not-allowed;
+}
+
+.canvagent-prompt-composer button:not(:disabled) {
+  background: #2563eb;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
+}
+
+.canvagent-prompt-composer button:not(:disabled):hover {
+  background: #3b82f6;
+}
+
+.canvagent-prompt-composer button svg {
+  width: 17px;
+  height: 17px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+@media (max-width: 720px) {
+  .canvagent-workspace-shell {
+    --canvagent-bottom-panel-height: 156px;
+  }
+
+  .canvagent-workspace-toolbar-anchor {
+    top: 12px;
+  }
+
+  .canvagent-workspace-style-panel-host {
+    margin-top: 10px;
+    max-width: calc(100vw - 24px);
+  }
+
+  .canvagent-toolbar {
+    gap: 2px;
+    padding: 6px;
+  }
+
+  .canvagent-toolbar button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .canvagent-stage-canvas {
+    min-height: 420px;
+  }
+
+  .canvagent-stage-surface {
+    padding: 78px 12px 12px;
+  }
+
+  .canvagent-stage-card,
+  .canvagent-stage-card-body {
+    width: 252px;
+  }
+
+  .canvagent-stage-card {
+    flex-basis: 252px;
+  }
+
+  .canvagent-stage-card-body {
+    height: 252px;
+  }
+
+  .canvagent-stage-style-panel-anchor {
+    max-width: calc(100vw - 24px);
+  }
+
+  .canvagent-stage-style-panel {
+    max-width: 100%;
+    gap: 6px;
+    padding: 8px 10px;
+    overflow-x: auto;
+  }
+
+  .canvagent-workspace-bottom-panel {
+    padding: 10px 12px 12px;
+  }
+
+  .canvagent-stage-zoom-chip {
+    right: 12px;
+  }
+}

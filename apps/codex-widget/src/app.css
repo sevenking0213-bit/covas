@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top, rgba(91, 33, 182, 0.12), transparent 35%),
+    linear-gradient(180deg, #f5f3ff 0%, #ffffff 46%, #f8fafc 100%);
+  color: #111827;
+  font-family: "SF Pro Text", "Segoe UI", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.codex-widget-app {
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.codex-widget-shell {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.codex-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+
+.codex-widget-eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c3aed;
+}
+
+.codex-widget-header h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.codex-widget-header p {
+  margin: 8px 0 0;
+  color: #4b5563;
+  max-width: 640px;
+}
+
+.codex-widget-session {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #111827;
+  color: #f9fafb;
+  min-width: 220px;
+}
+
+.codex-widget-session-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #c4b5fd;
+}
+
+.codex-widget-session-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.codex-widget-status {
+  padding: 14px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  background: rgba(255, 255, 255, 0.8);
+  color: #4b5563;
+}

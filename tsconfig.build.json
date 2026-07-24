@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "packages/shared-types/src",
+    "packages/bridge/src",
+    "packages/workspace/src",
+    "packages/adapter-web/src",
+    "packages/adapter-codex/src",
+    "packages/session-store/src",
+    "apps/playground-web/src",
+    "apps/codex-widget/src",
+    "examples/web-basic/src"
+  ],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"]
+}

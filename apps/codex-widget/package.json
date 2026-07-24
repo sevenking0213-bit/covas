@@ -1,0 +1,15 @@
+{
+  "name": "@covas/codex-widget",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@covas/workspace": "0.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

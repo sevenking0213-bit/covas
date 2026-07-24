@@ -1,0 +1,11 @@
+{
+  "name": "@covas/web-basic-example",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "dependencies": {
+    "@covas/adapter-web": "0.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}
