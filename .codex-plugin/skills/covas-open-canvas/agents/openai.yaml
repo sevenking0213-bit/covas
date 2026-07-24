@@ -1,0 +1,4 @@
+interface:
+  display_name: "Covas Open Canvas"
+  short_description: "Open the Covas single-image annotation widget"
+  default_prompt: "Use $covas:covas-open-canvas to open the Covas annotation workspace."

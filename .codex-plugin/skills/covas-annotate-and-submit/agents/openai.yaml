@@ -1,0 +1,4 @@
+interface:
+  display_name: "Covas Annotate & Submit"
+  short_description: "Submit annotated image from Covas back to Codex"
+  default_prompt: "Use $covas:covas-annotate-and-submit to send the annotated image back to Codex."

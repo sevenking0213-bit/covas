@@ -9,7 +9,9 @@
  *  - Tool:   render_covas_workspace_widget
  *               Opens the Covas workspace in the Codex sidebar.
  *  - Tool:   save_covas_session_state
- *               Persists the annotation session manifest to disk.
+ *               Persists the annotation session manifest to the user project.
+ *  - Tool:   get_covas_session_state
+ *               Reads the current session manifest (imagesById, imageOrder, activeImageId).
  *  - Tool:   submit_covas_annotation
  *               Sends the annotated image back to Codex as a submit result.
  */
@@ -33,22 +35,15 @@ import { covasStaticHtml } from './lib/covas-static-widget.mjs';
 
 const WIDGET_URI = 'ui://widget/covas/workspace.html';
 
-// ─── Session state ────────────────────────────────────────────────────────────
+// ─── Session paths (stored in user project, not plugin directory) ──────────────
 
-function sessionStateDir() {
-  return path.join(pluginRoot(), '.covas-sessions');
-}
-
-function sessionFilePath(projectDir, sessionId) {
-  const dir = path.join(sessionStateDir(), sanitizeProjectKey(projectDir));
-  return path.join(dir, `${sessionId}.json`);
-}
-
-function sanitizeProjectKey(projectDir) {
-  return String(projectDir)
-    .replace(/[^a-zA-Z0-9_.-]/g, '_')
-    .replace(/^_+/, '')
-    .replace(/_+$/, '');
+/**
+ * Resolves the absolute path to the session manifest file.
+ * Format: <projectDir>/canvas/sessions/<sessionId>/session.json
+ */
+function resolveSessionFilePath(projectDir, sessionId) {
+  const safeProjectDir = path.resolve(String(projectDir || process.cwd()));
+  return path.join(safeProjectDir, 'canvas', 'sessions', String(sessionId || 'default'), 'session.json');
 }
 
 // ─── Server ───────────────────────────────────────────────────────────────────
@@ -98,12 +93,11 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 
 // ─── Tool schemas ─────────────────────────────────────────────────────────────
 
-/** @type {import('@modelcontextprotocol/sdk/types.js').CallToolRequestSchema} */
 const RENDER_SCHEMA = {
   name: 'render_covas_workspace_widget',
   description:
     'Opens the Covas annotation workspace as a native widget in the Codex sidebar. ' +
-    'Pass projectDir to enable session persistence. ' +
+    'Pass projectDir to persist session data in the user project. ' +
     'Pass bootstrap.manifest to restore a previous session state.',
   inputSchema: {
     type: 'object',
@@ -123,7 +117,7 @@ const RENDER_SCHEMA = {
         properties: {
           manifest: {
             type: 'object',
-            description: 'CanvagentSessionManifest.',
+            description: 'CanvagentSessionManifest — imagesById, imageOrder, activeImageId, pageStateById.',
           },
           title: { type: 'string' },
           subtitle: { type: 'string' },
@@ -137,7 +131,8 @@ const RENDER_SCHEMA = {
 const SAVE_SCHEMA = {
   name: 'save_covas_session_state',
   description:
-    'Persists the current Covas annotation session to a local JSON file.',
+    'Persists the current Covas annotation session manifest to the user project directory. ' +
+    'Called automatically by the widget on state changes, or manually to checkpoint before navigation.',
   inputSchema: {
     type: 'object',
     properties: {
@@ -147,10 +142,32 @@ const SAVE_SCHEMA = {
       },
       manifest: {
         type: 'object',
-        description: 'CanvagentSessionManifest to persist.',
+        description: 'CanvagentSessionManifest — includes sessionId, imagesById, imageOrder, activeImageId, pageStateById.',
       },
     },
     required: ['projectDir', 'manifest'],
+  },
+};
+
+const GET_SCHEMA = {
+  name: 'get_covas_session_state',
+  description:
+    'Reads the current Covas session manifest from the user project directory. ' +
+    'Returns imagesById, imageOrder, activeImageId, and pageStateById. ' +
+    'Use this to list available versions before calling render_covas_workspace_widget.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      projectDir: {
+        type: 'string',
+        description: 'Absolute path to the active Codex project directory.',
+      },
+      sessionId: {
+        type: 'string',
+        description: 'Session ID to read. Defaults to "default" if omitted.',
+      },
+    },
+    required: ['projectDir'],
   },
 };
 
@@ -166,7 +183,7 @@ const SUBMIT_SCHEMA = {
       activeImageId: { type: 'string' },
       payload: {
         type: 'object',
-        description: 'SubmitPayload from CanvagentWorkspace.onSubmit.',
+        description: 'SubmitPayload from CanvagentWorkspace.onSubmit — attachments, messageDraft, structuredResult.',
       },
     },
     required: ['sessionId', 'pageId', 'activeImageId', 'payload'],
@@ -174,7 +191,7 @@ const SUBMIT_SCHEMA = {
 };
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: [RENDER_SCHEMA, SAVE_SCHEMA, SUBMIT_SCHEMA],
+  tools: [RENDER_SCHEMA, SAVE_SCHEMA, GET_SCHEMA, SUBMIT_SCHEMA],
 }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -196,7 +213,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         title: args.bootstrap?.title ?? 'Covas Annotation',
         rendering: 'native-widget',
         preferredDisplayMode: args.preferredDisplayMode ?? 'inline',
-        staticDir: path.join(pluginRoot(), 'apps', 'codex-widget', 'dist'),
         projectDir: args.projectDir ?? '',
         bootstrap: args.bootstrap ?? {},
       },
@@ -217,7 +233,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     try {
       const sessionId = String(args.manifest.sessionId ?? 'default');
-      const filePath = sessionFilePath(args.projectDir, sessionId);
+      const filePath = resolveSessionFilePath(args.projectDir, sessionId);
       mkdirSync(path.dirname(filePath), { recursive: true });
       writeFileSync(filePath, JSON.stringify(args.manifest, null, 2), 'utf8');
 
@@ -225,7 +241,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         content: [
           {
             type: 'text',
-            text: `Session state saved to ${path.relative(pluginRoot(), filePath)}.`,
+            text: `Session state saved to canvas/sessions/${sessionId}/session.json.`,
           },
         ],
       };
@@ -235,6 +251,70 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           {
             type: 'text',
             text: `Failed to save session state: ${String(err)}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+
+  // ── get_covas_session_state ───────────────────────────────────────────────
+  if (name === 'get_covas_session_state') {
+    if (!args.projectDir) {
+      return {
+        content: [{ type: 'text', text: 'Missing projectDir.' }],
+        isError: true,
+      };
+    }
+
+    const sessionId = String(args.sessionId || 'default');
+    const filePath = resolveSessionFilePath(args.projectDir, sessionId);
+
+    if (!existsSync(filePath)) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `No session found for "${sessionId}" in project ${args.projectDir}.`,
+          },
+        ],
+        structuredContent: {
+          sessionId,
+          projectDir: args.projectDir,
+          exists: false,
+          imagesById: {},
+          imageOrder: [],
+          activeImageId: null,
+        },
+      };
+    }
+
+    try {
+      const manifest = JSON.parse(readFileSync(filePath, 'utf8'));
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Loaded session "${sessionId}" — ${(manifest.imageOrder || []).length} image(s), active: ${manifest.activeImageId ?? 'none'}.`,
+          },
+        ],
+        structuredContent: {
+          sessionId,
+          projectDir: args.projectDir,
+          filePath,
+          exists: true,
+          imageOrder: manifest.imageOrder || [],
+          imagesById: manifest.imagesById || {},
+          activeImageId: manifest.activeImageId ?? null,
+          pageStateById: manifest.pageStateById || {},
+        },
+      };
+    } catch (err) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Failed to read session state: ${String(err)}`,
           },
         ],
         isError: true,

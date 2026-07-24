@@ -1,0 +1,4 @@
+interface:
+  display_name: "Covas Show Versions"
+  short_description: "Show and switch between image versions in Covas"
+  default_prompt: "Use $covas:covas-show-versions to list image versions and switch to a specific one."
