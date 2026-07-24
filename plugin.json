@@ -1,0 +1,40 @@
+{
+  "name": "covas",
+  "version": "0.1.0",
+  "description": "Single-image annotation workspace for Codex — draw boxes, arrows, and freehand marks, then send annotated results back into the conversation.",
+  "author": {
+    "name": "sevenking0213",
+    "email": "sevenking0213@gmail.com"
+  },
+  "homepage": "https://github.com/sevenking0213-bit/covas",
+  "keywords": [
+    "annotation",
+    "canvas",
+    "image-annotation",
+    "konva",
+    "mcp-server"
+  ],
+  "skills": "./.codex-plugin/skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Covas",
+    "shortDescription": "Single-image annotation workspace in the Codex sidebar.",
+    "longDescription": "Covas provides a focused, single-image annotation canvas in the Codex sidebar. Load a reference image, draw boxes, arrows, and freehand marks, and send the annotated result back into your conversation. State is persisted per session.",
+    "developerName": "sevenking0213",
+    "category": "Productivity",
+    "websiteURL": "https://github.com/sevenking0213-bit/covas",
+    "brandColor": "#6366F1",
+    "capabilities": [
+      "Interactive canvas",
+      "Native Codex widget",
+      "Single-image annotation",
+      "Box, arrow, and freehand drawing",
+      "Per-session persistence"
+    ],
+    "defaultPrompt": [
+      "Open the Covas annotation workspace.",
+      "Annotate the image in Covas.",
+      "Show me the saved Covas annotation versions."
+    ]
+  }
+}

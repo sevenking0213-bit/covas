@@ -9,6 +9,6 @@
     "brandColor": "#6366F1",
     "defaultPrompt": "Open Covas."
   },
-  "skills": "./skills/",
+  "skills": "./.codex-plugin/skills/",
   "mcpServers": "./.mcp.json"
 }
