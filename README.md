@@ -1,95 +1,106 @@
 # Covas
 
-**Single-image visual annotation workspace for AI image iteration workflows.**
+Covas 是一个面向 Codex 的单图标注 widget 插件。在当前会话里打开标注画布，圈图、画箭头、写备注，提交后带标注的截图自动发回对话流。
 
-[![CI](https://github.com/your-org/covas/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/covas/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/@covas/workspace.svg)](https://www.npmjs.com/package/@covas/workspace)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## 功能
 
-## What is Covas?
+- 在 Codex 中打开原生标注画布 widget，支持矩形框、箭头、自由笔、文本气泡
+- 标注状态自动保存到 `.covas-sessions/`，关闭或重启不丢失
+- 同一张图的不同变体可平铺切换，标注跟随版本保留
+- 直接拖拽本地图片进入画布
+- 通过 MCP 工具读取会话状态、保存进度、提交标注结果
 
-Covas is a polished, open-source annotation workbench for image iteration. Drop in images, annotate with boxes, arrows, text and brush strokes, then send the structured result back into your AI agent workflow.
+## 安装
 
-It is built as a **host-neutral library** — the annotation workspace itself has no opinion about where it runs. Official adapters ship for web apps and Codex-style agents, and you can write your own adapter for any runtime.
+### 让 Codex 自动安装
 
-## ✨ Features
+把下面这段发给 Codex：
 
-- 🎯 **Single-image focused** — one annotation target at a time, zero cognitive overload
-- 🛠️ **Annotation tools** — pan, brush, rectangle, ellipse, arrow, text
-- 📎 **Smart export** — annotated image + message draft + structured JSON data in one payload
-- 🔌 **Adapter model** — swap the runtime adapter without touching the annotation UI
-- 📦 **Monorepo** — import only the packages you need
-- 🔒 **TypeScript-first** — full type coverage, zero `any`
-
-## Quick Start
-
-### Use in your React app
-
-```tsx
-import { createWebWorkspaceSession } from '@covas/adapter-web';
-import '@covas/workspace/styles.css';
-
-const sessionTree = createWebWorkspaceSession({
-  input: {
-    images: [{ id: 'img-1', src: 'https://example.com/image.jpg' }],
-    activeImageId: 'img-1',
-    context: { prompt: 'Refine this image based on the annotations.' },
-  },
-  onSubmit: async (payload) => {
-    console.log('messageDraft:', payload.messageDraft);
-    console.log('attachments:', payload.attachments);
-    console.log('annotations:', payload.structuredResult.annotations);
-  },
-});
-
-return <div>{sessionTree}</div>;
+```
+请从 https://github.com/sevenking0213-bit/covas.git 安装 Covas Codex 插件。
+请 clone 仓库到 ~/.codex/plugins/covas，确认 .codex-plugin/plugin.json 存在，
+把插件加入 personal marketplace，先运行 codex plugin marketplace add ~，
+再运行 codex plugin add covas@personal。
+安装后请告诉我是否需要开启新对话来加载 MCP 工具。
 ```
 
-### Local demo
+### 手动安装
 
 ```bash
-git clone https://github.com/your-org/covas.git
-cd covas
+mkdir -p ~/.codex/plugins
+git clone https://github.com/sevenking0213-bit/covas.git ~/.codex/plugins/covas
+cd ~/.codex/plugins/covas && npm install && npm run build
+```
+
+确保 `~/.agents/plugins/marketplace.json` 中有 Covas 条目：
+
+```json
+{
+  "name": "personal",
+  "interface": {
+    "displayName": "Personal"
+  },
+  "plugins": [
+    {
+      "name": "covas",
+      "source": {
+        "source": "local",
+        "path": "./plugins/covas"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
+```
+
+然后注册 marketplace 并安装插件：
+
+```bash
+codex plugin marketplace add ~
+codex plugin add covas@personal
+```
+
+## 使用
+
+### 打开标注画布
+
+在 Codex 中说：
+
+```
+请打开 Covas 标注画布。
+```
+
+Covas 会通过 `render_covas_workspace_widget` 在当前会话里渲染画布 widget。
+
+### 提交标注
+
+1. 在画布中对图片做标注（矩形框、箭头、文本等）
+2. 点击 **提交标注**，Covas 会把带标注的截图和会话状态发回对话流
+3. Codex 会根据标注内容继续处理
+
+### 保存会话状态
+
+Covas 会在 `.covas-sessions/` 目录下自动保存会话进度，下次打开时恢复。
+
+## 本地开发
+
+```bash
 npm install
-npm run dev:playground
+npm run build
+npm run test
 ```
 
-Open [http://localhost:5173](http://localhost:5173) to try the playground.
+---
 
-## Packages
+## 开发者
 
-| Package | Description |
-|---------|-------------|
-| `@covas/workspace` | Core Konva-based annotation UI |
-| `@covas/bridge` | Host-neutral open/submit lifecycle |
-| `@covas/shared-types` | Public TypeScript contracts |
-| `@covas/adapter-web` | React/web integration |
-| `@covas/adapter-codex` | Codex agent adapter |
-| `@covas/session-store` | Session persistence helpers |
+sevenking  
+sevenking0213@gmail.com
 
-## Architecture
+## 致谢
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      Your Application                        │
-├──────────────────┬──────────────────────────────────────────┤
-│   Your Adapter   │  (@covas/adapter-web, adapter-codex…)   │
-├──────────────────┴──────────────────────────────────────────┤
-│                      @covas/bridge                           │
-│         openWorkspace() · onSubmit(payload)                  │
-├─────────────────────────────────────────────────────────────┤
-│                    @covas/workspace                          │
-│         Konva Stage · Tools · Export · Thumbnails            │
-├─────────────────────────────────────────────────────────────┤
-│                  @covas/shared-types                         │
-│              WorkspaceImage · Annotation types                │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## License
-
-MIT — see [LICENSE](LICENSE).
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions welcome!
+Covas 的画布标注核心基于 [Konva](https://github.com/konvajs/konva) 开源框架构建。
